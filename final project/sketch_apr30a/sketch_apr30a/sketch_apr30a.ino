@@ -17,8 +17,6 @@ int distanceInch;
 #define RST_PIN   4  // RC522 Reset
 #define SERVO_PIN 26  // Servo Sinyal Pini
 
-#define sensor1Pin 27
-#define sensor2Pin 14
 
 Servo motor;
 MFRC522 rfid(SS_PIN, RST_PIN);
@@ -30,8 +28,6 @@ void setup() {
   SPI.begin();          // Standart SPI başlatma (SCK:18, MISO:19, MOSI:23)
   rfid.PCD_Init();
   
-  pinMode(sensor1Pin, INPUT);
-  pinMode(sensor2Pin, INPUT);
 
   motor.setPeriodHertz(50);           // Standart 50Hz servo
   motor.attach(SERVO_PIN, 500, 2400); // Pin ve darbe genişlikleri
