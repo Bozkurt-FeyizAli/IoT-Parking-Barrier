@@ -2,6 +2,16 @@
 #include <MFRC522.h>
 #include <ESP32Servo.h> // ESP32 için özel servo kütüphanesi
 
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
 const int trigPin = 13;
 const int echoPin = 12;
 
@@ -40,7 +50,15 @@ void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
 
-  
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;);
+  }
+  display.clearDisplay();
+
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+
   delay(500);
 
   
@@ -73,7 +91,50 @@ void loop() {
   // Serial.print("Distance (inch): ");
   // Serial.println(distanceInch);
 
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 5);
+  //Display distance in cm
+  display.print("distanceCm: ");
+  display.print(distanceCm);
+  display.println(" cm");
 
+  display.println();
+
+  //Display distance in cm
+  display.print("distanceInch: ");
+  display.print(distanceInch);
+  display.print(" inch");
+
+  display.println();
+
+  display.print("slot1: ");
+  if (sensor1Value == HIGH) {
+  display.print("free");
+  } else {
+  display.print("full");
+  }
+  
+  display.println();
+
+  display.print("slot2: ");
+  if (sensor2Value == HIGH) {
+  display.print("free");
+  } else {
+  display.print("full");
+  }
+  
+  // Display distance in inches
+  /* display.print(distanceInch);
+  display.print(" in");*/
+  display.display(); 
+
+
+  
+  
+
+  
 
 
   if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial())
