@@ -13,7 +13,7 @@
 Servo motor;
 MFRC522 rfid(SS_PIN, RST_PIN);
 
-byte ID[4] = {40, 130, 1, 14}; // Yetkili Kart ID
+byte ID[4] = {4, 30, 71, 154}; // Yetkili Kart ID
 
 void setup() {
   Serial.begin(115200);
