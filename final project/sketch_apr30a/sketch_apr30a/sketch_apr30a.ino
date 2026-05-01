@@ -22,6 +22,11 @@ long duration;
 int distanceCm;
 int distanceInch;
 
+boolean isAuthorized = false;
+boolean isDoorOpen = false;
+boolean slot1Full = false;
+boolean slot2Full = false;
+
 // ESP32 30-Pin Standart Bağlantıları
 #define SS_PIN    5   // RC522 SDA (SS)
 #define RST_PIN   4  // RC522 Reset
@@ -65,7 +70,8 @@ void setup() {
 }
 
 void loop() {
-
+  slot1Full = digitalRead(sensor1Pin) == LOW; // LOW ise dolu
+  slot2Full = digitalRead(sensor2Pin) == LOW; // LOW ise dolu
   // Clears the trigPin
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -124,36 +130,45 @@ void loop() {
   } else {
   display.print("full");
   }
-  
-  // Display distance in inches
-  /* display.print(distanceInch);
-  display.print(" in");*/
+
   display.display(); 
-
-
-  
-  
-
-  
 
 
   if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial())
     return;
-  
+  if (distanceCm > 20) {
+    Serial.println("Lutfen yaklasin");
+    ekranaYazdir();
+    delay(2000);
+    return;
+  }
+  else{
   if (rfid.uid.uidByte[0] == ID[0] && 
       rfid.uid.uidByte[1] == ID[1] &&
       rfid.uid.uidByte[2] == ID[2] &&
       rfid.uid.uidByte[3] == ID[3]) {
     
+    if(!slot1Full){    
     Serial.println("Kapi acildi");
     ekranaYazdir();
     motor.write(180);
     delay(3000);
     motor.write(0);
     delay(1000);
+    slot1Full = true; // Park yeri dolu olarak işaretle
+    }
+    else{
+      Serial.println("Park yeri dolu");
+      ekranaYazdir();
+    }
+
+    
   } else {
     Serial.println("Yetkisiz Kart");
     ekranaYazdir();
+  }
+
+
   }
   rfid.PICC_HaltA();
 
