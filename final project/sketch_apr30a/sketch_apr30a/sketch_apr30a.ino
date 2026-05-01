@@ -133,44 +133,35 @@ void loop() {
 
   display.display(); 
 
-
-  if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial())
-    return;
   if (distanceCm > 20) {
     Serial.println("Lutfen yaklasin");
     ekranaYazdir();
     delay(2000);
     return;
   }
-  else{
-  if (rfid.uid.uidByte[0] == ID[0] && 
-      rfid.uid.uidByte[1] == ID[1] &&
-      rfid.uid.uidByte[2] == ID[2] &&
-      rfid.uid.uidByte[3] == ID[3]) {
+
+
+  if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()){
+    if(publicLogin()){
+      Serial.println("Genel Kart ile Giris Basarili");
+      openDoor();
+    }
     
-    if(!slot1Full){    
-    Serial.println("Kapi acildi");
+    return;
+  }
+  
+  else{
+  if (privateLogin()) {
+    Serial.println("Ozel Kart ile Giris Basarili");
     ekranaYazdir();
-    motor.write(180);
-    delay(3000);
-    motor.write(0);
-    delay(1000);
+    openDoor();
     slot1Full = true; // Park yeri dolu olarak işaretle
     }
-    else{
-      Serial.println("Park yeri dolu");
-      ekranaYazdir();
-    }
-
-    
-  } else {
-    Serial.println("Yetkisiz Kart");
-    ekranaYazdir();
+ 
   }
 
 
-  }
-  rfid.PICC_HaltA();
+ rfid.PICC_HaltA();
 
 
 }
@@ -182,4 +173,39 @@ void ekranaYazdir() {
     Serial.print(" ");
   }
   Serial.println("");
+}
+
+boolean privateLogin() {
+  if (rfid.uid.uidByte[0] != ID[0] && 
+      rfid.uid.uidByte[1] != ID[1] &&
+      rfid.uid.uidByte[2] != ID[2] &&
+      rfid.uid.uidByte[3] != ID[3]) {
+    return false;
+  }
+  if(slot1Full==true){
+    Serial.println("Park yeri dolu");
+    return false;
+  }
+  else{
+    slot1Full = true; // Park yeri dolu olarak işaretle
+    return true;
+  }
+}
+
+boolean publicLogin() {
+  if(sloot2Full==true){
+    Serial.println("Park yeri dolu");
+    return false;
+  }
+  else{
+    slot2Full = true; // Park yeri dolu olarak işaretle
+    return true;
+  }
+   
+}
+
+void openDoor() {
+  motor.write(180); // Kapıyı aç
+  delay(3000); // Kapının açık kalma süresi
+  motor.write(0); // Kapıyı kapat
 }
