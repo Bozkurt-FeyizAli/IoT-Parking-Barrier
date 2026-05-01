@@ -142,25 +142,14 @@ void loop() {
 
 
   if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()){
-    if(publicLogin()){
+    if(publicLogin())
       Serial.println("Genel Kart ile Giris Basarili");
-      openDoor();
-    }
-    
     return;
   }
-  
   else{
-  if (privateLogin()) {
+  if (privateLogin()) 
     Serial.println("Ozel Kart ile Giris Basarili");
-    ekranaYazdir();
-    openDoor();
-    slot1Full = true; // Park yeri dolu olarak işaretle
-    }
- 
   }
-
-
  rfid.PICC_HaltA();
 
 
@@ -187,18 +176,21 @@ boolean privateLogin() {
     return false;
   }
   else{
+    openDoor();
     slot1Full = true; // Park yeri dolu olarak işaretle
+    ekranaYazdir();
     return true;
   }
 }
 
 boolean publicLogin() {
-  if(sloot2Full==true){
+  if(slot2Full==true){
     Serial.println("Park yeri dolu");
     return false;
   }
   else{
     slot2Full = true; // Park yeri dolu olarak işaretle
+    openDoor();
     return true;
   }
    
