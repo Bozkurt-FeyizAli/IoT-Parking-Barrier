@@ -16,7 +16,8 @@ const int trigPin = 13;
 const int echoPin = 12;
 
 #define buttonPin 33
-boolean buttonPushed = false;
+boolean lastButtonState = false;
+int buttonPushedTime = 0;
 
 #define SOUND_SPEED 0.034
 #define CM_TO_INCH 0.393701
@@ -95,14 +96,17 @@ void loop() {
   int sensor2Value = digitalRead(sensor2Pin);
   boolean buttonState= digitalRead(buttonPin);
 
-  if(buttonState){
-      if(buttonPushed){
-        motor.write(0);
-      }
-      else{
-        openDoor();
-      }
+  if(buttonPushedTime>0 && (millis() - buttonPushedTime) > 5000){
+    closeDoor();
+    buttonPushedTime = 0;
   }
+  if(buttonState&& !lastButtonState){
+      openDoor();
+  }
+  else{
+      closeDoor();
+  }
+  lastButtonState = buttonState;
 
   // // Prints the distance in the Serial Monitor
   // Serial.print("Distance (cm): ");
@@ -177,7 +181,11 @@ boolean publicLogin() {
 
 void openDoor() {
   motor.write(90); // Kapıyı aç
-  delay(3000); // Kapının açık kalma süresi
+  // delay(3000); // Kapının açık kalma süresi
+  // motor.write(0); // Kapıyı kapat
+}
+
+void closeDoor() {
   motor.write(0); // Kapıyı kapat
 }
 
