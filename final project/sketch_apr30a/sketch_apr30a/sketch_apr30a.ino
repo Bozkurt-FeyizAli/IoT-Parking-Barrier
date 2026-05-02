@@ -18,6 +18,7 @@ const int echoPin = 12;
 #define buttonPin 33
 boolean lastButtonState = false;
 int buttonPushedTime = 0;
+int doorOpenTime = 0;
 
 #define SOUND_SPEED 0.034
 #define CM_TO_INCH 0.393701
@@ -26,8 +27,8 @@ long duration;
 int distanceCm;
 int distanceInch;
 
-boolean isAuthorized = false;
-boolean isDoorOpen = false;
+// boolean isAuthorized = false;
+// boolean isDoorOpen = false;
 boolean slot1Full = false;
 boolean slot2Full = false;
 
@@ -116,6 +117,10 @@ void loop() {
 
   displayOled(distanceCm, sensor1Value, sensor2Value);
 
+  if (isDoorOpen && (millis() - doorOpenTime) > 5000) {
+    closeDoor();
+  }
+  
   if (distanceCm > 20) {
     Serial.println("Lutfen yaklasin");
     ekranaYazdir();
@@ -133,7 +138,7 @@ void loop() {
   if (privateLogin()) 
     Serial.println("Ozel Kart ile Giris Basarili");
   }
- rfid.PICC_HaltA();
+  rfid.PICC_HaltA();
 
 
 }
@@ -160,6 +165,7 @@ boolean privateLogin() {
   }
   else{
     openDoor();
+    doorOpenTime = millis();
     slot1Full = true; // Park yeri dolu olarak işaretle
     ekranaYazdir();
     return true;
@@ -174,6 +180,7 @@ boolean publicLogin() {
   else{
     slot2Full = true; // Park yeri dolu olarak işaretle
     openDoor();
+    doorOpenTime = millis();
     return true;
   }
    
