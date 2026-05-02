@@ -29,8 +29,8 @@ int distanceInch;
 
 // boolean isAuthorized = false;
 // boolean isDoorOpen = false;
-boolean slot1Full = false;
-boolean slot2Full = false;
+int slot1Full = false;
+int slot2Full = false;
 
 // ESP32 30-Pin Standart Bağlantıları
 #define SS_PIN    5   // RC522 SDA (SS)
@@ -77,8 +77,8 @@ void setup() {
 }
 
 void loop() {
-  slot1Full = digitalRead(sensor1Pin) == LOW; // LOW ise dolu
-  slot2Full = digitalRead(sensor2Pin) == LOW; // LOW ise dolu
+  slot1Full = digitalRead(sensor1Pin); // LOW ise dolu
+  slot2Full = digitalRead(sensor2Pin); // LOW ise dolu
   // Clears the trigPin
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -95,6 +95,21 @@ void loop() {
   
   int sensor1Value = digitalRead(sensor1Pin);
   int sensor2Value = digitalRead(sensor2Pin);
+
+  if (sensor1Value != slot1Full) {
+    if (sensor1Value == HIGH) {
+      OpenDoor();
+      isDoorOpen = true;
+      doorOpenTime = millis();
+    } 
+  }
+  if (sensor2Value != slot2Full) {
+    if (sensor2Value == HIGH) {
+      OpenDoor();
+      isDoorOpen = true;
+      doorOpenTime = millis();
+    }
+  }
   boolean buttonState= digitalRead(buttonPin);
 
   if(buttonPushedTime>0 && (millis() - buttonPushedTime) > 5000){
@@ -119,6 +134,7 @@ void loop() {
 
   if (isDoorOpen && (millis() - doorOpenTime) > 5000) {
     closeDoor();
+    isDoorOpen = false;
   }
   
   if (distanceCm > 20) {
@@ -159,26 +175,26 @@ boolean privateLogin() {
       rfid.uid.uidByte[3] != ID[3]) {
     return false;
   }
-  if(slot1Full==true){
+  if(slot1Full==HIGH){
     Serial.println("Park yeri dolu");
     return false;
   }
   else{
     openDoor();
     doorOpenTime = millis();
-    slot1Full = true; // Park yeri dolu olarak işaretle
+    slot1Full = HIGH; // Park yeri dolu olarak işaretle
     ekranaYazdir();
     return true;
   }
 }
 
 boolean publicLogin() {
-  if(slot2Full==true){
+  if(slot2Full==HIGH){
     Serial.println("Park yeri dolu");
     return false;
   }
   else{
-    slot2Full = true; // Park yeri dolu olarak işaretle
+    slot2Full = HIGH; // Park yeri dolu olarak işaretle
     openDoor();
     doorOpenTime = millis();
     return true;
