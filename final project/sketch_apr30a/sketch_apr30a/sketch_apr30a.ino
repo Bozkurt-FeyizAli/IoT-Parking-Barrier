@@ -79,37 +79,9 @@ void setup() {
 void loop() {
   slot1Full = digitalRead(sensor1Pin); // LOW ise dolu
   slot2Full = digitalRead(sensor2Pin); // LOW ise dolu
-  // Clears the trigPin
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  // Sets the trigPin on HIGH state for 10 micro seconds
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
   
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin, HIGH);
-  
-  // Calculate the distance
-  distanceCm = duration * SOUND_SPEED/2;
-  
-  int sensor1Value = digitalRead(sensor1Pin);
-  int sensor2Value = digitalRead(sensor2Pin);
+  distanceCm = measureDistance();
 
-  if (sensor1Value != slot1Full) {
-    if (sensor1Value == HIGH) {
-      OpenDoor();
-      isDoorOpen = true;
-      doorOpenTime = millis();
-    } 
-  }
-  if (sensor2Value != slot2Full) {
-    if (sensor2Value == HIGH) {
-      OpenDoor();
-      isDoorOpen = true;
-      doorOpenTime = millis();
-    }
-  }
   boolean buttonState= digitalRead(buttonPin);
 
   if(buttonPushedTime>0 && (millis() - buttonPushedTime) > 5000){
@@ -124,35 +96,49 @@ void loop() {
   }
   lastButtonState = buttonState;
 
-  // // Prints the distance in the Serial Monitor
-  // Serial.print("Distance (cm): ");
-  // Serial.println(distanceCm);
-  // Serial.print("Distance (inch): ");
-  // Serial.println(distanceInch);
-
-  displayOled(distanceCm, sensor1Value, sensor2Value);
 
   if (isDoorOpen && (millis() - doorOpenTime) > 5000) {
     closeDoor();
     isDoorOpen = false;
   }
+
+  int sensor1Value = digitalRead(sensor1Pin);
+  int sensor2Value = digitalRead(sensor2Pin);
+
+  if (sensor1Value != slot1Full) {
+    if (sensor1Value == HIGH) {
+      OpenDoor();
+      isDoorOpen = true;
+      doorOpenTime = millis();
+      slot1Full = HIGH; 
+    } 
+  }
+  if (sensor2Value != slot2Full) {
+    if (sensor2Value == HIGH) {
+      OpenDoor();
+      isDoorOpen = true;
+      doorOpenTime = millis();
+      slot2Full = HIGH;
+    }
+  }
+
+  displayOled(distanceCm, sensor1Value, sensor2Value);
   
   if (distanceCm > 20) {
-    Serial.println("Lutfen yaklasin");
+    Serial.println("Please approach the parking lot");
     ekranaYazdir();
     delay(2000);
     return;
   }
 
-
   if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()){
     if(publicLogin())
-      Serial.println("Genel Kart ile Giris Basarili");
+      Serial.println("Public user entrance successful");
     return;
   }
   else{
   if (privateLogin()) 
-    Serial.println("Ozel Kart ile Giris Basarili");
+    Serial.println("Private user entrance successful");
   }
   rfid.PICC_HaltA();
 
@@ -160,7 +146,7 @@ void loop() {
 }
 
 void ekranaYazdir() {
-  Serial.print("ID Numarasi: ");
+  Serial.print("Card UID:");
   for (int sayac = 0; sayac < 4; sayac++) {
     Serial.print(rfid.uid.uidByte[sayac]);
     Serial.print(" ");
@@ -176,7 +162,7 @@ boolean privateLogin() {
     return false;
   }
   if(slot1Full==HIGH){
-    Serial.println("Park yeri dolu");
+    Serial.println("Park slot 1 is full");
     return false;
   }
   else{
@@ -190,7 +176,7 @@ boolean privateLogin() {
 
 boolean publicLogin() {
   if(slot2Full==HIGH){
-    Serial.println("Park yeri dolu");
+    Serial.println("Park slot 2 is full");
     return false;
   }
   else{
@@ -244,4 +230,16 @@ void displayOled(int distanceCm, int sensor1Value, int sensor2Value) {
   }
 
   display.display(); 
+}
+
+int measureDistance() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  distanceCm = duration * SOUND_SPEED / 2;
+  return distanceCm;
 }
