@@ -15,6 +15,9 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 const int trigPin = 13;
 const int echoPin = 12;
 
+#define buttonPin 33
+boolean buttonPushed = false;
+
 #define SOUND_SPEED 0.034
 #define CM_TO_INCH 0.393701
 
@@ -47,6 +50,8 @@ void setup() {
   
   pinMode(sensor1Pin, INPUT);
   pinMode(sensor2Pin, INPUT);
+  pinMode(buttonPin, INPUT);
+  pinMode(buttonPushed, INPUT);
 
   motor.setPeriodHertz(50);           // Standart 50Hz servo
   motor.attach(SERVO_PIN, 500, 2400); // Pin ve darbe genişlikleri
@@ -86,52 +91,26 @@ void loop() {
   // Calculate the distance
   distanceCm = duration * SOUND_SPEED/2;
   
-  // Convert to inches
-  distanceInch = distanceCm * CM_TO_INCH;
-  
   int sensor1Value = digitalRead(sensor1Pin);
   int sensor2Value = digitalRead(sensor2Pin);
+  boolean buttonState= digitalRead(buttonPin);
+
+  if(buttonState){
+      if(buttonPushed){
+        motor.write(0);
+      }
+      else{
+        openDoor();
+      }
+  }
+
   // // Prints the distance in the Serial Monitor
   // Serial.print("Distance (cm): ");
   // Serial.println(distanceCm);
   // Serial.print("Distance (inch): ");
   // Serial.println(distanceInch);
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 5);
-  //Display distance in cm
-  display.print("distanceCm: ");
-  display.print(distanceCm);
-  display.println(" cm");
-
-  display.println();
-
-  //Display distance in cm
-  display.print("distanceInch: ");
-  display.print(distanceInch);
-  display.print(" inch");
-
-  display.println();
-
-  display.print("slot1: ");
-  if (sensor1Value == HIGH) {
-  display.print("free");
-  } else {
-  display.print("full");
-  }
-  
-  display.println();
-
-  display.print("slot2: ");
-  if (sensor2Value == HIGH) {
-  display.print("free");
-  } else {
-  display.print("full");
-  }
-
-  display.display(); 
+  displayOled(distanceCm, sensor1Value, sensor2Value);
 
   if (distanceCm > 20) {
     Serial.println("Lutfen yaklasin");
@@ -197,7 +176,7 @@ boolean publicLogin() {
 }
 
 void openDoor() {
-  motor.write(180); // Kapıyı aç
+  motor.write(90); // Kapıyı aç
   delay(3000); // Kapının açık kalma süresi
   motor.write(0); // Kapıyı kapat
 }
