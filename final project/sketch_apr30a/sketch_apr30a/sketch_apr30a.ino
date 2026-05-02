@@ -180,3 +180,37 @@ void openDoor() {
   delay(3000); // Kapının açık kalma süresi
   motor.write(0); // Kapıyı kapat
 }
+
+
+
+void displayOled(int distanceCm, int sensor1Value, int sensor2Value) {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 5);
+  //Display distance in cm
+  display.print("distanceCm: ");
+  display.print(distanceCm);
+  display.println(" cm");
+
+
+  display.println();
+
+  display.print("slot1: ");
+  if (sensor1Value == HIGH) {
+  display.print("free");
+  } else {
+  display.print("full");
+  }
+  
+  display.println();
+
+  display.print("slot2: ");
+  if (sensor2Value == HIGH) {
+  display.print("free");
+  } else {
+  display.print("full");
+  }
+
+  display.display(); 
+}
