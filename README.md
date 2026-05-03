@@ -16,10 +16,10 @@ In small apartment buildings, finding a parking spot can be hard, and checking c
   * 2x LEDs (show if spots are free or full)
 * **Button:** For opening the gate by hand or letting visitors in
 
-## 3. Wiring Table & Diagram
+## 3. Wiring Table & Diagram   Note: Tables are inorder at github page, look at file for better view
 
 | Component         | ESP32 Pin | Note                     |
-| :--- --- --- ---  | :--- --- -| :--- --- --- --- --- --- |
+| :---------------- | :-------- | :----------------------- |
 | **RC522 SDA (SS)**| GPIO 5    | SPI                      |
 | **RC522 RST**     | GPIO 4    | Reset                    |
 | **Servo Motor**   | GPIO 26   | PWM Signal               |
@@ -40,7 +40,7 @@ In small apartment buildings, finding a parking spot can be hard, and checking c
 This project uses **Arduino IoT Cloud**. To make it work, you need to create these variables in your dashboard:
 
 | Variable Name           | Type     | Permission | Purpose |
-| :--- --- ---            | :--- ----| :--- --- --- --- --- --- |
+| :---------------------- | :------- | :--------- | :----------------------------- |
 | `distance`              | `float`  | Read Only  | Car distance at the gate |
 | `slot1`                 | `bool`   | Read Only  | Slot 1 status (true = full) |
 | `slot2`                 | `bool`   | Read Only  | Slot 2 status (true = full) |
