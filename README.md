@@ -1,7 +1,7 @@
 # Smart Parking Barrier System
 
 ## 1. Project Summary
-Finding a parking spot in a small apartment building can be hard. Sometimes visitors take the owners' spots, or security has to check every car manually, which is slow. This project is a smart barrier system that fixes this. It uses an ESP32 board and connects to the internet. When a car drives up, an ultrasonic sensor (HC-SR04) sees it. If the driver lives there, they scan an RFID card. If the card is correct, a small motor (SG-90 servo) opens the gate. Two IR sensors watch the parking spots to see if they are empty or full, and two LEDs light up to show this. There is also a small OLED screen on the gate that shows useful info, like Wi-Fi signal and if the spots are full. Everything is connected to the Arduino IoT Cloud. From a web page, you can see all the sensor data. You can also open the gate from the website if someone doesn't have a card.
+In small apartment buildings, finding a parking spot is hard and manual security checks are slow. This project fixes this with a smart barrier system using an ESP32.  When a car arrives, an HC-SR04 distance sensor sees it. Owners scan an RFID card, and if it is valid, an SG-90 servo motor opens the gate. Inside, two IR sensors and LEDs show if the parking spots are free or full. A small OLED screen on the gate displays live information.  Everything connects to the Arduino IoT Cloud. From a web page, an operator can monitor the parking spots or easily open the gate for visitors without a card.  
 
 ## 2. Components List
 * **Microcontroller:** ESP32
