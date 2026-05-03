@@ -90,6 +90,11 @@ Here’s how the OLED screen looks when you are watching the system live:
 
 ![OLED Screen](images/oled_screen.png)
 
+### Cloud Dashboard
+Here is the view of the Arduino IoT Cloud Dashboard:
+
+![Cloud Dashboard](images/cloud_dashboard.png)
+
 ### Project Demo
 
 > **Note:** It may take a little while to load the GIFs. Please wait a moment.
