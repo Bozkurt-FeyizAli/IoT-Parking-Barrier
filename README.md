@@ -92,6 +92,10 @@ The system can run in two different ways: **AUTO** or **MANUAL**.
 
 ## 7. Evidence
 
+### Dashboard Interface
+Here is what the Arduino IoT Cloud dashboard looks like when monitoring the system:
+![Cloud Dashboard](images/dashboard_screenshot.png)
+
 ### Project Demo  : Can take a while to load the GIFs, please wait a moment
 I recorded the physical model and the cloud dashboard. You can see how they work together in real-time below:
 
