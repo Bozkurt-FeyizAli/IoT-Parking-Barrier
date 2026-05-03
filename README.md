@@ -92,7 +92,7 @@ The system can run in two different ways: **AUTO** or **MANUAL**.
 
 ## 7. Evidence
 
-### Project Demo
+### Project Demo  : Can take a while to load the GIFs, please wait a moment
 I recorded the physical model and the cloud dashboard. You can see how they work together in real-time below:
 
 <table style="width:100%">
@@ -100,6 +100,6 @@ I recorded the physical model and the cloud dashboard. You can see how they work
     <th style="text-align:center">Physical Model Action & Cloud Dashboard Sync</th>
   </tr>
   <tr>
-    <td><img src="images/physical_demo_1.gif" width="400"/></td>
+    <td><img src="images/physical_demo.gif" width="400"/></td>
   </tr>
 </table>
