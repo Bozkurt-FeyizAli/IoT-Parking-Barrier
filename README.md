@@ -1,19 +1,20 @@
 # Smart Parking Barrier System
 
 ## 1. Project Summary
-In small apartment buildings, finding a parking spot is hard and manual security checks are slow. This project fixes this with a smart barrier system using an ESP32.  When a car arrives, an HC-SR04 distance sensor sees it. Owners scan an RFID card, and if it is valid, an SG-90 servo motor opens the gate. Inside, two IR sensors and LEDs show if the parking spots are free or full. A small OLED screen on the gate displays live information.  Everything connects to the Arduino IoT Cloud. From a web page, an operator can monitor the parking spots or easily open the gate for visitors without a card.  
+In small apartment buildings, finding a parking spot can be hard, and checking cars by hand takes a lot of time. This project solves that problem with a smart parking barrier using an ESP32. When a car arrives, an HC-SR04 distance sensor notices it. Car owners scan their RFID cards, and if the card is valid, a small SG-90 servo motor opens the gate. Inside the parking area, two IR sensors and LEDs show if the parking spots are free or full. There is also a small OLED screen on the gate to show live information. Everything is connected to the Arduino IoT Cloud. You can check parking spots or open the gate for visitors from a web page, even if they don’t have a card.
 
-## 2. Components List
+## 2. List of Parts
+
 * **Microcontroller:** ESP32
-* **Sensors:** 
-  * HC-SR04 (Ultrasonic distance sensor)
-  * RC522 (RFID Reader)
+* **Sensors:**
+  * HC-SR04 (ultrasonic distance sensor)
+  * RC522 (RFID reader)
   * 2x IR Obstacle Sensors (FC-51)
 * **Display:** 0.96-inch I2C OLED (128x64)
-* **Actuators & Outputs:** 
+* **Other Parts:**
   * SG-90 Servo Motor (opens the gate)
-  * 2x LEDs (Slot indicators)
-* **Input:** Push Button (for manual exit or visitor entry)
+  * 2x LEDs (show if spots are free or full)
+* **Button:** For opening the gate by hand or letting visitors in
 
 ## 3. Wiring Table & Diagram
 
@@ -50,55 +51,50 @@ This project uses **Arduino IoT Cloud**. To make it work, you need to create the
 | `gate_activity`         | `int`    | Read Only  | Used for the chart |
 | `unauthorized_attempts` | `int`    | Read Only  | Counts bad card scans |
 
-### Dashboard Widgets
-Add these widgets to your Arduino Cloud dashboard to monitor everything:
-
-1.  **Gauge:** Link to `distance` to see how close a car is.
-2.  **LEDs (x2):** Link to `slot1` and `slot2` to see if parking spots are taken.
-3.  **Value:** Link to `rfid_uid` and `message` to read system info.
-4.  **Value:** Link to `mode` so you can type "AUTO" or "MANUAL" to change it.
-5.  **Switch:** Link to `barrier_switch` to open the gate yourself.
-6.  **Value:** Link to `unauthorized_attempts` to see if someone tried a fake card.
-7.  **Chart:** Link to `gate_activity` to see a graph of when the gate opened.
-
 ## 5. How to Run
-1.  Open the Arduino IDE and make sure you have the ESP32 board installed.
-2.  Install these libraries:
-    *   `MFRC522`
-    *   `ESP32Servo`
-    *   `Adafruit GFX Library`
-    *   `Adafruit SSD1306`
-3.  Go to **Arduino IoT Cloud** and set up your variables just like the table above.
-4.  Put in your Wi-Fi name and password.
-5.  Upload the code to your ESP32 board.
-6.  Open your cloud dashboard and you are ready to go!
 
-## 6. How it Works
-The system can run in two different ways: **AUTO** or **MANUAL**.
+1. Open Arduino IDE and make sure you have the ESP32 board installed.
+2. Install these libraries:
+   * MFRC522
+   * ESP32Servo
+   * Adafruit GFX Library
+   * Adafruit SSD1306
+3. Go to Arduino IoT Cloud and set up your variables as in the table.
+4. Enter your Wi-Fi name and password in the code.
+5. Upload the code to your ESP32 board.
+6. Open your cloud dashboard – you are ready!
 
-- **AUTO Mode:**
-    - The HC-SR04 sensor looks for cars. If a car is closer than 20 cm, the system waits for an RFID card.
-    - If you scan the correct card and a parking spot is free, the servo motor opens the gate. It closes by itself after 5 seconds.
-    - The IR sensors watch the parking spots. If a car parks, the LED turns on and the dashboard updates.
-- **MANUAL Mode:**
-    - If you change the mode to MANUAL on the website, the sensors and RFID reader stop opening the gate.
-    - You can use the `barrier_switch` on the dashboard to open or close the gate. This is great if a visitor comes and doesn't have a card.
-- **Local Display:** The OLED screen on the gate shows lots of info:
-    - Car distance
-    - If the slots are empty or full
-    - Your Wi-Fi IP address
-    - If the cloud is connected
-    - If it is in AUTO or MANUAL mode
+## 6. How It Works
+The system has two modes: **AUTO** and **MANUAL**.
+
+**AUTO Mode:**
+* The HC-SR04 sensor looks for cars. If a car is close (less than 20 cm), the system waits for an RFID card.
+* If the right card is scanned and a parking spot is free, the gate opens with the servo and closes again after 5 seconds.
+* IR sensors check if the spots are full. If a car parks, the LED turns on and the dashboard updates.
+
+**MANUAL Mode:**
+* If you switch to MANUAL mode on the website, the sensors and card reader stop working.
+* You can open or close the gate with the `barrier_switch` on the dashboard. This is useful for visitors.
+
+**Local Display:** The OLED screen on the gate shows:
+* Car distance
+* If spots are free or full
+* Your Wi-Fi IP address
+* If the cloud is connected
+* AUTO or MANUAL mode
 
 ## 7. Evidence
 
 ### OLED Screen
-Here is what the OLED screen looks like when monitoring the system locally:
-![OLED Screen](images/oled_screen.jpeg)
+Here’s how the OLED screen looks when you are watching the system live:
 
-### Project Demo  : Can take a while to load the GIFs, please wait a moment
-I recorded the physical model and the cloud dashboard. You can see how they work together in real-time below:
+![OLED Screen](images/oled_screen.png)
 
+### Project Demo
+
+> **Note:** It may take a little while to load the GIFs. Please wait a moment.
+
+Below you can see a recording of the real model and the cloud dashboard working together in real time:
 <table style="width:100%">
   <tr>
     <th style="text-align:center">Physical Model Action & Cloud Dashboard Sync</th>
