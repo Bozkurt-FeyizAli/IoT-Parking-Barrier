@@ -105,6 +105,3 @@ I recorded the physical model and the cloud dashboard. You can see how they work
     <td><img src="images/dashboard_demo.gif" width="400"/></td>
   </tr>
 </table>
-
-### Full Video Link
-[Watch the Full Demo Video Here](https://link-to-your-video.com)
