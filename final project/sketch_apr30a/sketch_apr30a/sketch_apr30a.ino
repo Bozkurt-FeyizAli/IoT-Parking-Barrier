@@ -49,7 +49,7 @@ void setup() {
   Serial.begin(115200);
   SPI.begin();          // Standart SPI başlatma (SCK:18, MISO:19, MOSI:23)
   rfid.PCD_Init();
-  
+
   pinMode(sensor1Pin, INPUT);
   pinMode(sensor2Pin, INPUT);
   pinMode(buttonPin, INPUT);
@@ -57,7 +57,7 @@ void setup() {
 
   motor.setPeriodHertz(50);           // Standart 50Hz servo
   motor.attach(SERVO_PIN, 500, 2400); // Pin ve darbe genişlikleri
-  motor.write(0); 
+  motor.write(0);
 
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
@@ -73,13 +73,13 @@ void setup() {
 
   delay(500);
 
-  
+
 }
 
 void loop() {
   slot1Full = digitalRead(sensor1Pin); // LOW ise dolu
   slot2Full = digitalRead(sensor2Pin); // LOW ise dolu
-  
+
   distanceCm = measureDistance();
 
   boolean buttonState= digitalRead(buttonPin);
@@ -110,8 +110,8 @@ void loop() {
       OpenDoor();
       isDoorOpen = true;
       doorOpenTime = millis();
-      slot1Full = HIGH; 
-    } 
+      slot1Full = HIGH;
+    }
   }
   if (sensor2Value != slot2Full) {
     if (sensor2Value == HIGH) {
@@ -123,7 +123,7 @@ void loop() {
   }
 
   displayOled(distanceCm, sensor1Value, sensor2Value);
-  
+
   if (distanceCm > 20) {
     Serial.println("Please approach the parking lot");
     ekranaYazdir();
@@ -137,7 +137,7 @@ void loop() {
     return;
   }
   else{
-  if (privateLogin()) 
+  if (privateLogin())
     Serial.println("Private user entrance successful");
   }
   rfid.PICC_HaltA();
@@ -155,7 +155,7 @@ void ekranaYazdir() {
 }
 
 boolean privateLogin() {
-  if (rfid.uid.uidByte[0] != ID[0] && 
+  if (rfid.uid.uidByte[0] != ID[0] &&
       rfid.uid.uidByte[1] != ID[1] &&
       rfid.uid.uidByte[2] != ID[2] &&
       rfid.uid.uidByte[3] != ID[3]) {
@@ -185,7 +185,7 @@ boolean publicLogin() {
     doorOpenTime = millis();
     return true;
   }
-   
+
 }
 
 void openDoor() {
@@ -219,7 +219,7 @@ void displayOled(int distanceCm, int sensor1Value, int sensor2Value) {
   } else {
   display.print("full");
   }
-  
+
   display.println();
 
   display.print("slot2: ");
@@ -229,7 +229,7 @@ void displayOled(int distanceCm, int sensor1Value, int sensor2Value) {
   display.print("full");
   }
 
-  display.display(); 
+  display.display();
 }
 
 int measureDistance() {
