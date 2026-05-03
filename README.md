@@ -88,7 +88,7 @@ The system has two modes: **AUTO** and **MANUAL**.
 ### OLED Screen
 Here’s how the OLED screen looks when you are watching the system live:
 
-![OLED Screen](images/oled_screen.png)
+![OLED Screen](images/oled_screen.jpeg)
 
 ### Cloud Dashboard
 Here is the view of the Arduino IoT Cloud Dashboard:
