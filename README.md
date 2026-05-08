@@ -31,13 +31,13 @@ In small apartment buildings, finding a parking spot can be hard, and checking c
 | **Slot 1 LED**    | GPIO 32   | Status light             |
 | **Slot 2 LED**    | GPIO 25   | Status light             |
 
-> **Note:** Make sure to connect all the ground (GND) wires together.
+> **Note:** all the ground (GND) wires should be connected together.
 
 ### Wiring Diagram
 ![Wiring Diagram](images/wiring_diagram.jpg)
 
 ## 4. Cloud Setup
-This project uses **Arduino IoT Cloud**. To make it work, you need to create these variables in your dashboard:
+**Arduino IoT Cloud** can be used to monitor and control the parking barrier system. To make it work, you need to create these variables in your dashboard:
 
 | Variable Name           | Type     | Permission | Purpose |
 | :---------------------- | :------- | :--------- | :----------------------------- |
@@ -83,6 +83,7 @@ The system has two modes: **AUTO** and **MANUAL**.
 * If the cloud is connected
 * AUTO or MANUAL mode
 
+![Flow Chart](images/flow_chart.png)
 ## 7. Evidence
 
 ### OLED Screen
@@ -97,9 +98,7 @@ Here is the view of the Arduino IoT Cloud Dashboard:
 
 ### Project Demo
 
-> **Note:** It may take a little while to load the GIFs. Please wait a moment.
-
-Below you can see a recording of the real model and the cloud dashboard working together in real time:
+Below you can see recording of the model and the cloud dashboard working together in real time:
 <table style="width:100%">
   <tr>
     <th style="text-align:center">Physical Model Action & Cloud Dashboard Sync</th>
